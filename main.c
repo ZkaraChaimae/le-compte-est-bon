@@ -39,7 +39,7 @@ int isSign(char c)
 int isPoint(char c)
 {
      //le caractere c est un point
-    if( ( c == '+' ) || ( c == '-' ) ) 
+    if(  c == '.'  ) 
         return(1);
     //le caractere c n'est pas une signe
     return(0);       
@@ -60,7 +60,7 @@ int main(int argc, char **argv)
     courant = getchar();
     
     //verifier la validite du caractere courant
-    if( !isNumber(courant) || !isSign(courant) || !isPoint(courant) )
+    if( !isNumber(courant) && !isSign(courant) && !isPoint(courant) )
     {
         //on affiche un message d'erreur
         printf("erreur entrer un nombre valide");
@@ -76,8 +76,22 @@ int main(int argc, char **argv)
     if( isNumber(courant) )
         //on calcule sa valuer puit on lajout a partieE
         partieE = courant - '0';
+        printf("\n%d", partieE);
     
     if( isPoint(courant) )
+        //on saut vers la partie qui calcule la partie flottant
+        goto flottant;
+
     
+    //calcule de la partie entiere
+    while ( (( courant = getchar() ) != '\n') || ( courant == '.' ) )
+        partieE = (partieE*10) + (courant - '0') ;
+    
+    //calcule de la partie flottante
+    flottant : 
+    while( ( courant = getchar() ) != '\n' )
+        partieF = (partieF*10) + (courant - '0');
+    
+    printf("\n%d", partieF);
 	return 0;
 }
