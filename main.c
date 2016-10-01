@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <math.h>
 
 //declarations des constantes
 //ces constantes sont utilisées juste 
