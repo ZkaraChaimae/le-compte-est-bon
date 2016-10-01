@@ -2,13 +2,13 @@
 #include <math.h>
 
 //declarations des constantes
-#define ANSI_COLOR_RED     "\x1b[31m"
-#define ANSI_COLOR_GREEN   "\x1b[32m"
-#define ANSI_COLOR_YELLOW  "\x1b[33m"
-#define ANSI_COLOR_BLUE    "\x1b[34m"
-#define ANSI_COLOR_MAGENTA "\x1b[35m"
-#define ANSI_COLOR_CYAN    "\x1b[36m"
-#define ANSI_COLOR_RESET   "\x1b[0m"
+#define RED     "\x1b[31m"
+#define GREEN   "\x1b[32m"
+#define YELLOW  "\x1b[33m"
+#define BLUE    "\x1b[34m"
+#define MAGENTA "\x1b[35m"
+#define CYAN    "\x1b[36m"
+#define RESET   "\x1b[0m"
 
 
 /**
@@ -56,6 +56,18 @@ int isPoint(char c)
     return(0);       
 }
 
+/**
+ * @brief affichage du text colore dans la console
+ * @param couleur : la couleur(definie dans les constantes)
+ * @param message : le message a afficher
+ */
+void printColored(char couleur[9], char *message)
+{
+    printf(couleur);
+    printf(message);
+    printf(RESET);
+}
+
 int main(int argc, char **argv)
 {  
     //declaration des variables
@@ -63,30 +75,36 @@ int main(int argc, char **argv)
     int partieF = 0; // la partie flottante
     double nombre = 0; //le nombre la partie entier + la partie flottante
     char courant;    // le caractere courant dans le buffer
-    char signe = '\0'; //le signe du nombre
+    short signe = 1; //le signe du nombre
+    char signeA = '\0'; //la signe a afficher, utiliser pour afficher
+                        //le signe + si l'utilisateur l'a taper
+    short nbrInt = 0;  // pour detecter si le nombre entre est un nombre
+                       //purement entier ou bien decimal, qui va sert a
+                       //a afficher le bon nombre
     double f = 1;
     
-    printf(ANSI_COLOR_BLUE "\t***Convertion from a string to a number***");
-    printf(ANSI_COLOR_RESET "\n\n");
-    
+    printColored(BLUE, "\t******************************************\n");
+    printColored(BLUE, "\t***Convertion from a string to a number***\n");
+    printColored(BLUE, "\t******************************************\n");
+    printf("\n\n\t");
     //premierment en lire le nombre 
-    printf( ANSI_COLOR_YELLOW "\tEntrez un nombre ..." );
-    printf( ANSI_COLOR_RESET "\n\n\t" );
+    printColored(CYAN, "Entrez un nombre ...");
+    printf("\n\n\t");
     courant = getchar();
     
     //verifier la validite du caractere courant
     if( !isNumber(courant) && !isSign(courant) && !isPoint(courant) )
     {
         //on affiche un message d'erreur
-        printf(ANSI_COLOR_RED "erreur entrer un nombre valide");
-        printf( ANSI_COLOR_RESET "\n");
+        printColored(RED, "\n\terreur entrer un nombre valide");
+        printf("\n\n\t");
         return(0);
     }
     
     //si le caractere courant est un signe
     if( isSign(courant) )
         //on sauvgarde le signe dans une variable
-        signe = courant;
+        (courant == '-') ? (signe = -1): (signe = 1, signeA = '+') ;
         
     //si le caractere courant est un nombre
     if( isNumber(courant) )
@@ -105,36 +123,60 @@ int main(int argc, char **argv)
         if( !isNumber(courant) )
         {
             //on affiche un message d'erreur
-            printf(ANSI_COLOR_RED "erreur le nombre n'est pas valide [0-9]");
-            printf( ANSI_COLOR_RESET "\n");
+            printColored(RED, "\n\terreur entrer un nombre valide 2");
+            printf("\n\n\t");
             return(0);
         }
+        //si il est valide on l'ajout a la partie entiere
         partieE = (partieE*10) + (courant - '0') ;
     }
     
+    //si on est dans la fin de la chaine on saute vers la fin du programme
+    if( courant == '\n' ) 
+    {
+        //il y a pas de virgule entree, alors le nombre est purmemet entier
+        nbrInt = 1;
+        //on saut vers la fin du programme pour afficher le nombre
+        goto Fin;
+    }
+
     //calcule de la partie flottante
     flottant :
-    while( ( courant = getchar() ) != '\n' )
+    while( (courant = getchar()) != '\n' )
     {
+        //test la validite du nombre
         if( !isNumber(courant) )
         {
             //on affiche un message d'erreur
-            printf(ANSI_COLOR_RED "erreur le nombre n'est pas valide [0-9]");
-            printf( ANSI_COLOR_RESET "\n\n\t");
+            printColored(RED, "\n\terreur entrer un nombre valide 2");
+            printf("\n\n\t");
             return(0);
         }
+        //si il est valide on l'ajoute a parie flottante
         partieF = (partieF*10) + (courant - '0');
         f *= 0.1;
     }
        
        
+    Fin :
+    //calcule de la valuer du nombre
+    nombre = (partieE + (partieF*f)) * signe;
     
-    nombre = (partieE + (partieF*f));
-    //apres en pris en considiration le signe
+    //affichage du nombre
+    printf("\n\n\t");
+    printColored(CYAN, "**************************************************\n");
+    printf("\t");
+    printColored(CYAN, "* la chaine de caractere Transformée en nombre : *\n");
+    printColored(CYAN, "\t**************************************************");
+    printf("\n\n\t");
+    printf( BLUE );//changer la couleur du text vers le vert
+    //si le nombre est purment entier, on affiche la partie entier
+    if( nbrInt )
+        signeA == '+' ? printf("+%d", partieE) : printf("%d", partieE);
+    //le nombre contient une partie flottante, alors on doit l'afficher
+    else
+        signeA == '+' ? printf("+%f", nombre) : printf("%f", nombre);
+    printf( RESET "\n\n\t");
     
-    printf(ANSI_COLOR_GREEN);
-    printf("\n\n\t%c%f \n\n\t", signe, nombre);
-    printf(ANSI_COLOR_RESET);
-    
-	return 0;
+	return (0);
 }
