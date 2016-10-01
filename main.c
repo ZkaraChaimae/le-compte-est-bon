@@ -1,4 +1,15 @@
 #include <stdio.h>
+#include <math.h>
+
+//declarations des constantes
+#define ANSI_COLOR_RED     "\x1b[31m"
+#define ANSI_COLOR_GREEN   "\x1b[32m"
+#define ANSI_COLOR_YELLOW  "\x1b[33m"
+#define ANSI_COLOR_BLUE    "\x1b[34m"
+#define ANSI_COLOR_MAGENTA "\x1b[35m"
+#define ANSI_COLOR_CYAN    "\x1b[36m"
+#define ANSI_COLOR_RESET   "\x1b[0m"
+
 
 /**
  * @brief verifier si un caratere est nombre ou non 
@@ -45,28 +56,30 @@ int isPoint(char c)
     return(0);       
 }
 
-#include<stdio.h>
-#include<string.h>
-
 int main(int argc, char **argv)
 {  
     //declaration des variables
     int partieE = 0; //la partie entiere du nombre
     int partieF = 0; // la partie flottante
-    float nombre = 0; //le nombre la partie entier + la partie flottante
+    double nombre = 0; //le nombre la partie entier + la partie flottante
     char courant;    // le caractere courant dans le buffer
-    char signe = ' '; //le signe du nombre
-    float f = 1;
+    char signe = '\0'; //le signe du nombre
+    double f = 1;
+    
+    printf(ANSI_COLOR_BLUE "\t***Convertion from a string to a number***");
+    printf(ANSI_COLOR_RESET "\n\n");
     
     //premierment en lire le nombre 
-    printf("Entrez un nombre");
+    printf( ANSI_COLOR_YELLOW "\tEntrez un nombre ..." );
+    printf( ANSI_COLOR_RESET "\n\n\t" );
     courant = getchar();
     
     //verifier la validite du caractere courant
     if( !isNumber(courant) && !isSign(courant) && !isPoint(courant) )
     {
         //on affiche un message d'erreur
-        printf("erreur entrer un nombre valide");
+        printf(ANSI_COLOR_RED "erreur entrer un nombre valide");
+        printf( ANSI_COLOR_RESET "\n");
         return(0);
     }
     
@@ -79,7 +92,6 @@ int main(int argc, char **argv)
     if( isNumber(courant) )
         //on calcule sa valuer puit on lajout a partieE
         partieE = courant - '0';
-        printf("\n%d", partieE);
     
     if( isPoint(courant) )
         //on saut vers la partie qui calcule la partie flottant
@@ -88,20 +100,41 @@ int main(int argc, char **argv)
     
     //calcule de la partie entiere
     while ( (( courant = getchar() ) != '\n') && ( courant != '.' ) )
+    {
+        //si le caractere entre n'est pas valide
+        if( !isNumber(courant) )
+        {
+            //on affiche un message d'erreur
+            printf(ANSI_COLOR_RED "erreur le nombre n'est pas valide [0-9]");
+            printf( ANSI_COLOR_RESET "\n");
+            return(0);
+        }
         partieE = (partieE*10) + (courant - '0') ;
+    }
     
     //calcule de la partie flottante
-    flottant : 
+    flottant :
     while( ( courant = getchar() ) != '\n' )
     {
+        if( !isNumber(courant) )
+        {
+            //on affiche un message d'erreur
+            printf(ANSI_COLOR_RED "erreur le nombre n'est pas valide [0-9]");
+            printf( ANSI_COLOR_RESET "\n\n\t");
+            return(0);
+        }
         partieF = (partieF*10) + (courant - '0');
         f *= 0.1;
     }
        
-    nombre = partieE + (partieF * f);
-    printf("\n%f", nombre);
+       
     
-
+    nombre = (partieE + (partieF*f));
+    //apres en pris en considiration le signe
+    
+    printf(ANSI_COLOR_GREEN);
+    printf("\n\n\t%c%f \n\n\t", signe, nombre);
+    printf(ANSI_COLOR_RESET);
     
 	return 0;
 }
