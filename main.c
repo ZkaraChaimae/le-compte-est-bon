@@ -45,15 +45,18 @@ int isPoint(char c)
     return(0);       
 }
 
+#include<stdio.h>
+#include<string.h>
 
 int main(int argc, char **argv)
-{
-	
+{  
     //declaration des variables
     int partieE = 0; //la partie entiere du nombre
     int partieF = 0; // la partie flottante
+    float nombre = 0; //le nombre la partie entier + la partie flottante
     char courant;    // le caractere courant dans le buffer
     char signe = ' '; //le signe du nombre
+    float f = 1;
     
     //premierment en lire le nombre 
     printf("Entrez un nombre");
@@ -84,14 +87,21 @@ int main(int argc, char **argv)
 
     
     //calcule de la partie entiere
-    while ( (( courant = getchar() ) != '\n') || ( courant == '.' ) )
+    while ( (( courant = getchar() ) != '\n') && ( courant != '.' ) )
         partieE = (partieE*10) + (courant - '0') ;
     
     //calcule de la partie flottante
     flottant : 
     while( ( courant = getchar() ) != '\n' )
+    {
         partieF = (partieF*10) + (courant - '0');
+        f *= 0.1;
+    }
+       
+    nombre = partieE + (partieF * f);
+    printf("\n%f", nombre);
     
-    printf("\n%d", partieF);
+
+    
 	return 0;
 }
