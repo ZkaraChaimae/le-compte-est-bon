@@ -19,10 +19,10 @@
  **/
 int isNumber(char c)
 {
-    //le caractere c n'est un nombre
+    //le caractere c n'est pas un nombre
     if( ( c > '9' ) || ( c < '0' ) ) 
         return(0);
-    //le caractere c est pas un nombre
+    //le caractere c est un nombre
     return(1);
 }
 
@@ -34,10 +34,10 @@ int isNumber(char c)
  */
 int isSign(char c)
 {
-    //le caractere c est une signe
+    //le caractere c est un signe
     if( ( c == '+' ) || ( c == '-' ) ) 
         return(1);
-    //le caractere c n'est pas une signe
+    //le caractere c n'est pas un signe
     return(0);
 }
 
@@ -50,10 +50,7 @@ int isSign(char c)
 int isPoint(char c)
 {
      //le caractere c est un point
-    if(  c == '.'  ) 
-        return(1);
-    //le caractere c n'est pas une signe
-    return(0);       
+     (c == '.') ? return (1) : return (0) ;     
 }
 
 /**
